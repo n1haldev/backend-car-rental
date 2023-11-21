@@ -6,7 +6,7 @@ const getcars = async(req,res)=>{
         res.status(200).send(cars)
     }
     else{
-        res.status(404).send({message:"no cars yo"})
+        res.status(404).send({message:"no cars yo"})        
     }
 }
 
