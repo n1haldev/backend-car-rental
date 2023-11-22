@@ -5,7 +5,7 @@ const searchcars = async(req, res) => {
         const { name } = req.query;
         const regex = new RegExp(name, "i");
 
-        const searchedcars = await carDetails.find({ make: { $regex: regex } });
+        const searchedcars = await carDetails.find({ $or: [{make: { $regex: regex } }, {model: { $regex: regex }}]});
 
         if(searchedcars.length > 0) {
             res.status(200).json(searchedcars);
