@@ -11,6 +11,7 @@ const {getCar}=require("../controllers/getCar")
 const {getcarsHome}=require("../controllers/getCarsHome")
 const {deleteCar}=require("../controllers/deleteCar")
 const {filtercars} = require("../controllers/filterCars")
+const authMiddleware=require("../middleware/auth")
 
 
 
@@ -19,17 +20,23 @@ const {filtercars} = require("../controllers/filterCars")
 
 
 
-router.post("/signup",signupPost);
-router.post('/login',loginPost); 
-router.post("/admin",adminPost)
-router.post("/createcar",createCarPost)
-router.get("/getcars",getcars)
-router.get("/searchCars", searchcars)
-router.get("/getcarsHome",getcarsHome)
-router.get("/getcar/:id",getCar)
-router.post("/updatecar/:id",updateCar)
-router.delete("/deletecar/:id",deleteCar)
-router.get("/filtercars", filtercars)
+// Public routes
+router.post('/signup', signupPost);
+router.post('/login', loginPost);
+router.post('/admin', adminPost);
+
+// Protected routes (require JWT authentication)
+
+router.use(authMiddleware);
+router.post('/createcar', createCarPost);
+router.get('/getcars', getcars);
+router.get('/searchCars', searchcars);
+router.get('/getcarsHome', getcarsHome);
+router.get('/getcar/:id', getCar);
+router.post('/updatecar/:id', updateCar);
+router.delete('/deletecar/:id', deleteCar);
+router.get('/filtercars', filtercars);
+
 
 
 

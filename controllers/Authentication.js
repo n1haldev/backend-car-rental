@@ -1,17 +1,26 @@
 const bcrypt = require("bcrypt");
 const signup = require("../models/users");
+const jwt = require("jsonwebtoken");
+require("dotenv").config
+
 
 // -------------------------------------admin---------------------------------------//
 // const ADMIN_EMAIL = process.env.ADMIN_EMAIL;
 // const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
 
-// -------------------------------------signup--------------------------------------//
+
+
+const generateToken = (user) => {
+  const payload = { user: { id: user._id } };
+  return jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' }); 
+};
+
 const signupPost = async (req, res) => {
   const { email, password } = req.body;
   const saltRounds = 10;
   const salt = await bcrypt.genSalt(saltRounds);
   const hashedPassword = await bcrypt.hash(password, salt);
-  const SignedupUser = new signup({ email, password: hashedPassword});
+  const SignedupUser = new signup({ email, password: hashedPassword });
 
   try {
     const user = await signup.findOne({ email });
@@ -19,14 +28,14 @@ const signupPost = async (req, res) => {
       res.status(404).json({ error: "User exists" });
     } else {
       await SignedupUser.save();
-      res.status(200).json({ message: "Signup successful" });
+      const token = generateToken(SignedupUser);
+      res.status(200).json({ message: "Signup successful", token });
     }
   } catch (error) {
     res.status(500).json({ error: "An error occurred" });
   }
 };
 
-// -------------------------------------login----------------------------------------//
 const loginPost = async (req, res) => {
   const { email, password } = req.body;
 
@@ -40,19 +49,19 @@ const loginPost = async (req, res) => {
     const passwordMatch = await bcrypt.compare(password, user.password);
 
     if (passwordMatch) {
-      res.status(200).json({ message: "Login successful" });
-      console.log("login succesful")
+      const token = generateToken(user);
+      res.status(200).json({ message: "Login successful", token });
+      console.log("login successful");
     } else {
       res.status(401).json({ error: "Invalid password" });
-      console.log("invalid password")
-
+      console.log("invalid password");
     }
   } catch (error) {
     res.status(500).json({ error: "An error occurred" });
-    console.log("error occured`")
-
+    console.log("error occurred");
   }
 };
+
 // --------------------------------------------admin---------------------------------------------
 
 const adminPost =(req,res)=>{

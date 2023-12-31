@@ -7,8 +7,8 @@ const filtercars = async(req, res) => {
         const regex = new RegExp(model, "i");
         const regex1 = new RegExp(make, "i");
 
-
-        console.log(make, model, minPrice, maxPrice)
+        console.log(make)
+        // console.log("make model bs",make, model, minPrice, maxPrice)
 
         const filtered = await carDetails.find({
             $and: [
@@ -17,7 +17,7 @@ const filtercars = async(req, res) => {
               { price: { $gt: minPrice, $lt: maxPrice } }
             ]
           });
-        console.log(filtered)          
+        console.log("filtered bs",filtered)          
         // const filtered = await carDetails.find({$and: [{make: { $regex: regex1 }}, {model: { $regex: regex }}, {price: {$and: [{ $gt: {minPrice}}, {$lt: {maxPrice}}]}}]})
         if(!filtered){
             res.status(404).send({message:"no cars yo"})
