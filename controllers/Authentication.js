@@ -64,15 +64,19 @@ const loginPost = async (req, res) => {
 
 // --------------------------------------------admin---------------------------------------------
 
-const adminPost =(req,res)=>{
-  const {email,password}=req.body;
-  if(email===process.env.ADMIN_EMAIL && password===process.env.ADMIN_PASSWORD){
-    res.status(200).json({message:"admin login successful"})
+const adminPost = (req, res) => {
+  const { email, password } = req.body;
+
+  if (email === process.env.ADMIN_EMAIL && password === process.env.ADMIN_PASSWORD) {
+    const token = jwt.sign({ email: process.env.ADMIN_EMAIL }, process.env.JWT_SECRET, {
+      expiresIn: '1h',
+    });
+
+    res.status(200).json({ message: "Admin login successful", token });
+  } else {
+    res.status(401).json({ message: "Invalid credentials for admin" });
   }
-  else if(email!==process.env.ADMIN_EMAIL || password!==process.env.ADMIN_PASSWORD){
-    res.status(404).json({message:"invalid credentials for admin"})
-  }
-}
+};
 module.exports = {
   signupPost,
   loginPost,
