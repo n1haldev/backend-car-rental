@@ -15,6 +15,11 @@ app.use(cors(
     credentials: true, 
     }
 ));
+
+app.get("/",(req,res)=>{
+    res.json({message:"welcome"})
+})
+
 app.use("/app", routes);
 
 const mongoURI = process.env.MONGO_URI;
