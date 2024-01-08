@@ -1,21 +1,36 @@
+const { json } = require("express");
 const carDetails = require("../models/cars")
 
 const filtercars = async(req, res) => {
     try {
-        const { make } = req.make;
-        const { name } = req.search;
-        const { others } = req.filter;
-        const minPrice = others.minPrice;
-        const maxPrice = others.maxPrice;
+        const { make,model,minPrice,maxPrice } = req.query;
+        const regex = new RegExp(model, "i");
+        const regex1 = new RegExp(make, "i");
 
-        const filtered = await carDetails.find({$and: [{make: make}, {model: name}, {price: {$and: [{ $gt: {minPrice}}, {$lt: {maxPrice}}]}}]})
+        console.log(make)
+        // console.log("make model bs",make, model, minPrice, maxPrice)
 
-        if (response.length > 0) {
-            res.status(200).json(filtered);
+        const filtered = await carDetails.find({
+            $and: [
+              { make: { $regex: regex1 } },
+              { model: { $regex: regex } },
+              { price: { $gt: minPrice, $lt: maxPrice } }
+            ]
+          });
+        console.log("filtered bs",filtered)          
+        // const filtered = await carDetails.find({$and: [{make: { $regex: regex1 }}, {model: { $regex: regex }}, {price: {$and: [{ $gt: {minPrice}}, {$lt: {maxPrice}}]}}]})
+        if(!filtered){
+            res.status(404).send({message:"no cars yo"})
         }
-        else {
-            res.status(404).json({ message: "No matching cars available at the moment!"});
+        else{
+            res.status(200).json(filtered)
         }
+    //     if (filtered.length > 0) {
+    //         res.status(204).json(filtered);
+    //     }
+    //     else {
+    //         res.status  (404).json({ message: "No matching cars available at the moment!"});
+    //     }
     }
     catch (error) {
         console.log("ERROR: ", error);

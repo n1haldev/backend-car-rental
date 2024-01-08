@@ -11,6 +11,8 @@ const {getCar}=require("../controllers/getCar")
 const {getcarsHome}=require("../controllers/getCarsHome")
 const {deleteCar}=require("../controllers/deleteCar")
 const {filtercars} = require("../controllers/filterCars")
+const {authenticateToken}=require("../middleware/auth")
+const {authenticateAdminToken}=require("../middleware/auth")
 
 
 
@@ -19,17 +21,28 @@ const {filtercars} = require("../controllers/filterCars")
 
 
 
-router.post("/signup",signupPost);
-router.post('/login',loginPost); 
-router.post("/admin",adminPost)
-router.post("/createcar",createCarPost)
-router.get("/getcars",getcars)
-router.get("/searchCars", searchcars)
-router.get("/getcarsHome",getcarsHome)
-router.get("/getcar/:id",getCar)
-router.post("/updatecar/:id",updateCar)
-router.delete("/deletecar/:id",deleteCar)
-router.get("/filtercars", filtercars)
+// Public routes
+router.post('/signup', signupPost);
+router.post('/login', loginPost);
+router.get('/getcarsHome', getcarsHome);
+router.get('/getcars', getcars);
+router.get('/searchCars', searchcars);
+router.get('/filtercars', filtercars);
+
+
+
+// user routes or client routes
+
+router.get('/getcar/:id',authenticateToken, getCar);
+
+//admin routes
+router.post('/admin', adminPost);
+router.post('/createcar',authenticateAdminToken, createCarPost);
+router.post('/updatecar/:id',authenticateAdminToken, updateCar);
+router.delete('/deletecar/:id',authenticateAdminToken, deleteCar);
+
+
+
 
 
 
