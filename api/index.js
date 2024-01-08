@@ -2,7 +2,7 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const PORT = 4000;
-const routes = require("./Routes/routes");
+const routes = require("../Routes/routes");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 
