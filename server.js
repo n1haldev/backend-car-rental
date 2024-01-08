@@ -10,6 +10,9 @@ dotenv.config();
 
 app.use(express.json());
 app.use(cors());
+app.get("/",(req,res)=>{
+  res.send({"message":"home"})
+})
 app.use("/app", routes);
 
 const mongoURI = process.env.MONGO_URI;
