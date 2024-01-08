@@ -17,7 +17,7 @@ app.get("/", (req, res) => {
 });
 
 // Import routes
-const routes = require("./Routes/routes");
+const routes = require("../Routes/routes");
 app.use("/app", routes);
 
 const startServer = async () => {
